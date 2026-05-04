@@ -1,18 +1,15 @@
-name: AI CI/CD Pipeline
+name: CI Pipeline
 
 on:
   push:
     branches: [ "main" ]
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true   # future-proof for GitHub changes
-
 jobs:
-  build-test:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
+    - name: Checkout
       uses: actions/checkout@v5
 
     - name: Setup Python
@@ -21,26 +18,18 @@ jobs:
         python-version: "3.10"
 
     - name: Install Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+      run: pip install -r requirements.txt
 
-    - name: Run Tests and Capture Logs
+    - name: Run Tests
       run: |
         mkdir -p logs
-        echo "===== TEST EXECUTION START =====" > logs/test_output.log
-        pytest -vv >> logs/test_output.log 2>&1 || true
-        echo "===== TEST EXECUTION END =====" >> logs/test_output.log
+        pytest > logs/output.log 2>&1 || true
 
-    - name: Filter Logs (last 200 lines)
-      run: |
-        tail -n 200 logs/test_output.log > logs/filtered.log
+    - name: Show Logs
+      run: cat logs/output.log
 
-    - name: Print Logs (for debugging/demo)
-      run: cat logs/filtered.log
-
-    - name: Upload Logs Artifact
+    - name: Upload Logs
       uses: actions/upload-artifact@v4
       with:
-        name: filtered-logs
-        path: logs/filtered.log
+        name: logs
+        path: logs/output.log
