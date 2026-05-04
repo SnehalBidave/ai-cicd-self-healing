@@ -25,14 +25,14 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Create logs folder
-      run: mkdir -p logs
+    - name: Create logs folder (safe)
+      run: mkdir -p logs || true
 
     - name: Run Tests (never fail pipeline)
       run: |
         pytest > logs/output.log 2>&1 || echo "pytest failed but continuing"
 
-    - name: Show Logs (safe)
+    - name: Show Logs
       run: |
         if [ -f logs/output.log ]; then
           cat logs/output.log
@@ -40,7 +40,7 @@ jobs:
           echo "No logs file found"
         fi
 
-    - name: Run AI Analyzer (safe)
+    - name: Run AI Analyzer
       run: |
         if [ -f scripts/analyze_logs.py ]; then
           python scripts/analyze_logs.py || echo "Analyzer failed but continuing"
@@ -48,7 +48,7 @@ jobs:
           echo "Analyzer script not found"
         fi
 
-    - name: Upload Logs (safe)
+    - name: Upload Logs
       uses: actions/upload-artifact@v4
       with:
         name: logs
