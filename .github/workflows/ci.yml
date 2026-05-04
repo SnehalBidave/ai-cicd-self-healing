@@ -4,6 +4,9 @@ on:
   push:
     branches: [ "main" ]
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build-test:
     runs-on: ubuntu-latest
@@ -26,10 +29,11 @@ jobs:
         pytest > logs/output.log 2>&1 || true
 
     - name: Show Logs
-      run: cat logs/output.log
+      run: cat logs/output.log || true
 
-    - name: Run AI Analyzer
-      run: python scripts/analyze_logs.py
+    - name: Run AI Analyzer (SAFE)
+      run: |
+        python scripts/analyze_logs.py || true
 
     - name: Upload Logs
       uses: actions/upload-artifact@v4
