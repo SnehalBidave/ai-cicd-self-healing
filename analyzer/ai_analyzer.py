@@ -6,7 +6,7 @@ def extract_relevant_lines(log_text: str):
         if "error" in line.lower() or "failed" in line.lower() or "assert" in line.lower():
             important.append(line)
 
-    return important[-10:]  # last 10 important lines
+    return important[-10:]
 
 
 def analyze_logs(log_text: str):
@@ -14,7 +14,6 @@ def analyze_logs(log_text: str):
     relevant_lines = extract_relevant_lines(log_text)
     combined = " ".join(relevant_lines).lower()
 
-    # Detect test failure
     if "assert" in combined:
         return {
             "category": "Test Failure",
@@ -24,7 +23,6 @@ def analyze_logs(log_text: str):
             "evidence": relevant_lines
         }
 
-    # Detect dependency issue
     if "modulenotfounderror" in combined:
         return {
             "category": "Dependency Issue",
@@ -34,17 +32,15 @@ def analyze_logs(log_text: str):
             "evidence": relevant_lines
         }
 
-    # Detect syntax error
     if "syntaxerror" in combined:
         return {
             "category": "Code Issue",
             "root_cause": "Syntax error in code",
-            "fix": "Fix syntax in mentioned file/line",
+            "fix": "Fix syntax in code",
             "confidence": 0.88,
             "evidence": relevant_lines
         }
 
-    # Generic error
     if "error" in combined:
         return {
             "category": "General Error",
