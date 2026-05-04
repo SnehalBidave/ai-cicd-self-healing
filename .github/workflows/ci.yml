@@ -4,21 +4,25 @@ on:
   push:
     branches: [ "main" ]
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true   # future-proof for GitHub changes
+
 jobs:
   build-test:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout Code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Setup Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: "3.10"
 
     - name: Install Dependencies
       run: |
+        python -m pip install --upgrade pip
         pip install -r requirements.txt
 
     - name: Run Tests and Capture Logs
@@ -28,11 +32,14 @@ jobs:
         pytest -vv >> logs/test_output.log 2>&1 || true
         echo "===== TEST EXECUTION END =====" >> logs/test_output.log
 
-    - name: Filter Logs
+    - name: Filter Logs (last 200 lines)
       run: |
         tail -n 200 logs/test_output.log > logs/filtered.log
 
-    - name: Upload Logs
+    - name: Print Logs (for debugging/demo)
+      run: cat logs/filtered.log
+
+    - name: Upload Logs Artifact
       uses: actions/upload-artifact@v4
       with:
         name: filtered-logs
