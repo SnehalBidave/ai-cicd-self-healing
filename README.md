@@ -1,13 +1,19 @@
-# AI CI/CD Self-Healing System
-
-This project analyzes CI/CD failure logs and suggests fixes.
+# AI-Powered Self-Healing CI/CD System
 
 ## Features
 - CI/CD pipeline using GitHub Actions
-- Log generation and capture
-- Basic AI log analyzer
+- Automatic log capture on failure
+- AI-based log analysis
+- Structured output (category, root cause, fix)
 
-## Next Steps
-- Integrate real AI (OpenAI)
-- Auto-fix PR
+## Workflow
+1. Code pushed
+2. Tests run
+3. Logs generated
+4. Analyzer runs automatically
+5. Output displayed in pipeline
+
+## Future Enhancements
+- Real AI integration (OpenAI)
 - Slack notifications
+- Auto-fix PR generation
