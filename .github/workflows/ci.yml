@@ -10,7 +10,7 @@ jobs:
 
     steps:
     - name: Checkout Code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Setup Python
       uses: actions/setup-python@v4
@@ -33,7 +33,7 @@ jobs:
         tail -n 200 logs/test_output.log > logs/filtered.log
 
     - name: Upload Logs
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: filtered-logs
         path: logs/filtered.log
